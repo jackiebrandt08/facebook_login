@@ -9,3 +9,16 @@ module.exports = mongoose.model('User', {
     lastName: String,
     email: String,
 });
+
+email : String,
+local : {
+    password : String
+},
+facebook {
+    id: String,
+    token: String,
+    name: String
+    }
+    });
+    
+    

@@ -5,30 +5,36 @@ var bCrypt = require('bcrypt-nodejs');
 module.exports = function(passport){
 
 	passport.use('signup', new LocalStrategy({
+	        usernameField: 'email',
+            passwordField: 'password',
             passReqToCallback : true 
         },
-        function(req, username, password, done) {
+        function(req, email, password, done) {
+         if (email)
+                email = email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
 
            var findOrCreateUser = function(){
-                User.findOne({ 'username' :  username }, function(err, user) {
+
+                User.findOne({ 'email' :  email }, function(err, user) {
+
                     if (err){
                         console.log('Error in SignUp: '+err);
                         return done(err);
                     }
-               
-                    if (user) {
-                        console.log('User already exists with username: '+username);
-                        return done(null, false, req.flash('message','User Already Exists'));
-                    } else {
 
+                    if (user) {
+                        console.log('User already exists with email: '+ email);
+                        return done(null, false, req.flash('message','User with Email Already Exists'));
+                    } else {
+                        // if there is no user with that email
+                        // create the user
                         var newUser = new User();
 
-                        newUser.username = username;
-                        newUser.password = createHash(password);
+                        // set the user's local credentials
                         newUser.email = req.param('email');
-                        newUser.firstName = req.param('firstName');
-                        newUser.lastName = req.param('lastName');
+                        newUser.local.password = createHash(password);
 
+                        // save the user
                         newUser.save(function(err) {
                             if (err){
                                 console.log('Error in Saving user: '+err);  
@@ -43,9 +49,9 @@ module.exports = function(passport){
             process.nextTick(findOrCreateUser);
         })
     );
-    
+
+    // Generates hash using bCrypt
     var createHash = function(password){
         return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
     };
-
 };
