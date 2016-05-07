@@ -1,4 +1,3 @@
-//MLL - have to add fields for the different auths
 var mongoose = require("mongoose");
 
 module.exports = mongoose.model('User', {
@@ -9,5 +8,4 @@ module.exports = mongoose.model('User', {
     firstName: String,
     lastName: String,
     email: String,
-    access_token: String
 });

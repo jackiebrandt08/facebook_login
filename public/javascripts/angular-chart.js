@@ -1,7 +1,7 @@
 var app = angular.module('app', []);
 
 app.controller('dataController', function($scope, $http){
-    $http.get("https://assignment-1-sp2016-quyenvu917.c9users.io/business").then(function(response){
+    $http.get("https://login-asg3-jackiebrandt08.c9users.io/").then(function(response){
         
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(function(){
